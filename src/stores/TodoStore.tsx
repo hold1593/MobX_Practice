@@ -3,10 +3,12 @@ import {action, makeObservable, observable} from 'mobx';
 class Todo {
   id;
   content;
+  rate;
 
-  constructor(id: any, content: any) {
+  constructor(id: any, content: any, rate: any) {
     this.id = id;
     this.content = content;
+    this.rate = rate;
   }
 }
 
@@ -22,7 +24,7 @@ export class TodoStore {
       todos: observable,
       addTodo: action,
       deleteTodo: action,
-      changeTodo: action,
+      changeRate: action,
     })
   
 
@@ -30,22 +32,22 @@ export class TodoStore {
 
     // initial state 설정하는곳
     this.todos = [
-      new Todo(1, '운동하기'),
-      new Todo(2, '영화보기'),
-      new Todo(3, '책읽기'),
+      new Todo(1, '운동하기', 0),
+      new Todo(2, '영화보기', 0),
+      new Todo(3, '책읽기', 0),
     ]
   }
 
   // @action
-  addTodo(content: string){
+  addTodo(content: string, rate: number){
     if(this.todos.length === 0) {
       this.todos = [
-        new Todo(1, content)
+        new Todo(1, content, 0)
       ]
     }else{
       this.todos = [
         ...this.todos,
-        new Todo(this.todos[this.todos.length - 1].id+1, content),
+        new Todo(this.todos[this.todos.length - 1].id+1, content, rate),
       ]
     }
   }
@@ -56,13 +58,13 @@ export class TodoStore {
   }
 
   // @action 
-  changeTodo(id: number, content: string){
+  changeRate(id: number, rate: number){
     const idx = this.todos.findIndex((x) => x.id === id);
     const todo = this.todos[idx];
 
     this.todos = [
       ...this.todos.slice(0, idx),
-      new Todo(todo.id, todo.content),
+      new Todo(todo.id, todo.content, rate),
       ...this.todos.slice(idx + 1, this.todos.length)
     ]
   }
